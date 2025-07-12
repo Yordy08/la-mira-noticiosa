@@ -1,14 +1,11 @@
 // server/api/registro.post.ts
-
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
-
 
 const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
-
   const { nombre, correo, clave } = body
 
   if (!nombre || !correo || !clave) {
@@ -18,9 +15,8 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // ✅ Corrección aquí: usar Registro (con mayúscula)
-  const usuarioExistente = await prisma.Registro.findUnique({
-    where: { correo }
+  const usuarioExistente = await prisma.registro.findUnique({
+    where: { correo },
   })
 
   if (usuarioExistente) {
@@ -32,8 +28,7 @@ export default defineEventHandler(async (event) => {
 
   const hashedClave = await bcrypt.hash(clave, 10)
 
-  // ✅ Corrección aquí también: usar Registro
-  const nuevoUsuario = await prisma.Registro.create({
+  const nuevoUsuario = await prisma.registro.create({
     data: {
       nombre,
       correo,
