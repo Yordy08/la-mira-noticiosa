@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const usuarioExistente = await prisma.registro.findUnique({
+  const usuarioExistente = await prisma.Registro.findUnique({
     where: { correo },
   })
 
@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
 
   const hashedClave = await bcrypt.hash(clave, 10)
 
-  const nuevoUsuario = await prisma.registro.create({
+  const nuevoUsuario = await prisma.Registro.create({
     data: {
       nombre,
       correo,
