@@ -14,3 +14,11 @@ model Registro {
   clave    String
   creadoEn DateTime @default(now())
 }
+model Noticia {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  foto       String
+  titular    String
+  descripcion String
+  fecha      DateTime @default(now())
+  categoria  String
+}
