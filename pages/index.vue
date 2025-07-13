@@ -1,7 +1,5 @@
-<!-- pages/index.vue -->
 <template>
-  <div>
-    <h1>Página de inicio</h1>
-    <p>Bienvenido a tu proyecto Nuxt</p>
-  </div>
+  <h1>
+  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nisi placeat repellat, optio nemo, nam aspernatur, praesentium expedita a tempora repudiandae ab veniam harum maiores possimus delectus! Reiciendis ratione eligendi molestias!
+  </h1>
 </template>

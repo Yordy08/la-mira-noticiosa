@@ -1,7 +1,9 @@
 <!-- layouts/default.vue -->
 <template>
   <div>
+    <Navinfo />
     <Navbar />
+    <Navcatego />
     <NuxtPage />
   </div>
 </template>
