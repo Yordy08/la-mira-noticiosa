@@ -15,10 +15,14 @@ model Registro {
   creadoEn DateTime @default(now())
 }
 model Noticia {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  foto       String
-  titular    String
-  descripcion String
-  fecha      DateTime @default(now())
-  categoria  String
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  foto            String
+  titular         String
+  descripcion     String
+  metaDescripcion String
+  fraseClave      String
+  slug            String   @unique
+  fecha           DateTime
+  categoria       String
+  creadoEn        DateTime @default(now())
 }

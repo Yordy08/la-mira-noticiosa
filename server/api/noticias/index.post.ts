@@ -1,30 +1,33 @@
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+// server/api/noticias/index.post.ts
+import { defineEventHandler, readBody, createError } from 'h3'
+import { prisma } from '~/server/utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event)
-  const { foto, titular, descripcion, fecha, categoria } = body
+  try {
+    const body = await readBody(event)
 
-  if (!foto || !titular || !descripcion || !fecha || !categoria) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Todos los campos son obligatorios',
+    const nuevaNoticia = await prisma.noticia.create({
+      data: {
+        foto: body.foto,
+        titular: body.titular,
+        descripcion: body.descripcion,
+        metaDescripcion: body.metaDescripcion,
+        fraseClave: body.fraseClave,
+        slug: body.slug,
+        fecha: new Date(body.fecha),
+        categoria: body.categoria
+      }
     })
-  }
 
-  const noticia = await prisma.noticia.create({
-    data: {
-      foto,
-      titular,
-      descripcion,
-      fecha: new Date(fecha),
-      categoria,
-    },
-  })
-
-  return {
-    mensaje: 'Noticia creada correctamente',
-    noticia,
+    return {
+      mensaje: '✅ Noticia creada exitosamente',
+      noticia: nuevaNoticia
+    }
+  } catch (error) {
+    console.error('❌ Error al crear noticia:', error)
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Error al crear la noticia',
+    })
   }
 })
