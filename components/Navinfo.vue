@@ -1,12 +1,19 @@
 <template>
   <!-- Escritorio -->
-  <div class="bg-light border-bottom py-2 px-3 d-none d-md-flex justify-content-between align-items-center small">
-    <div class="d-flex flex-wrap gap-3">
-      <a href="#" class="text-decoration-none text-dark">Acerca de</a>
-      <a href="#" class="text-decoration-none text-dark">Contacto</a>
-      <a href="#" class="text-decoration-none text-dark">Ayuda</a>
-      <a href="#" class="text-decoration-none text-dark">FAQs</a>
+  <div class="bg-light border-bottom py-2 px-3 d-none d-md-flex justify-content-between align-items-center small flex-wrap">
+    <!-- Sección de categorías -->
+    <div class="d-flex flex-wrap gap-2">
+      <NuxtLink
+        v-for="categoria in categorias"
+        :key="categoria"
+        :to="`/categoria/${encodeURIComponent(categoria)}`"
+        class="categoria-link text-decoration-none text-dark px-2 py-1 rounded"
+      >
+        {{ categoria }}
+      </NuxtLink>
     </div>
+
+    <!-- Otras opciones -->
     <div class="d-flex flex-wrap gap-3">
       <a href="#" class="text-decoration-none text-dark">Mi Cuenta</a>
       <a href="#" class="text-decoration-none text-dark">USD</a>
@@ -15,23 +22,50 @@
   </div>
 
   <!-- Móvil -->
-  <div class="bg-light border-bottom py-2 px-3 d-flex d-md-none justify-content-center flex-wrap text-center small">
-    <div class="w-100 text-dark">
-      <span class="mx-1"><a href="#" class="text-decoration-none text-dark">Acerca de</a></span>|
-      <span class="mx-1"><a href="#" class="text-decoration-none text-dark">Contacto</a></span>|
-      <span class="mx-1"><a href="#" class="text-decoration-none text-dark">Ayuda</a></span>|
-      <span class="mx-1"><a href="#" class="text-decoration-none text-dark">FAQs</a></span>
-    </div>
-    <div class="w-100 mt-1 text-dark">
-      <span class="mx-1"><a href="#" class="text-decoration-none text-dark">Mi Cuenta</a></span>|
-      <span class="mx-1"><a href="#" class="text-decoration-none text-dark">USD</a></span>|
-      <span class="mx-1"><a href="#" class="text-decoration-none text-dark">ES</a></span>
+  <div class="bg-light border-bottom py-2 px-3 d-md-none text-center small">
+    <div class="categorias-scroll">
+      <div class="d-flex flex-nowrap gap-2">
+        <NuxtLink
+          v-for="categoria in categorias"
+          :key="categoria"
+          :to="`/categoria/${encodeURIComponent(categoria)}`"
+          class="categoria-link text-decoration-none text-dark px-2 py-1 rounded d-inline-block"
+        >
+          {{ categoria }}
+        </NuxtLink>
+      </div>
     </div>
   </div>
 </template>
 
+<script setup>
+const categorias = [
+  'Nacional', 'Internacional', 'Política', 'Economía', 'Salud', 'Educación',
+  'Cultura', 'Deportes', 'Tecnología', 'Judicial', 'Medio Ambiente',
+  'Denuncias Ciudadanas', 'Opinión', 'Viral', 'Turismo'
+]
+</script>
+
 <style scoped>
 a:hover {
-  color: #ffc107 !important;
+  color: #ff0000 !important;
+}
+
+.categoria-link {
+  background-color: #f1f1f1;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.categoria-link:hover {
+  background-color: #ff0000;
+  color: white !important;
+}
+
+.categorias-scroll {
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 6px;
 }
 </style>

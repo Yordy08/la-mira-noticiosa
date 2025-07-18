@@ -39,10 +39,32 @@
             <input v-model="metaDescripcion" type="text" class="form-control" placeholder="Para Google y redes" />
           </div>
 
-          <!-- Descripción -->
+          <!-- Descripción con editor enriquecido -->
           <div class="col-12">
             <label class="form-label">🗒️ Descripción</label>
-            <textarea v-model="descripcion" class="form-control" rows="4" placeholder="Contenido de la noticia" required></textarea>
+
+            <!-- Barra de herramientas -->
+            <div class="btn-toolbar mb-2" role="toolbar">
+              <div class="btn-group me-2" role="group">
+                <button type="button" class="btn btn-outline-secondary btn-sm" @click="execCmd('bold')"><b>B</b></button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" @click="execCmd('italic')"><i>I</i></button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" @click="execCmd('underline')"><u>U</u></button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" @click="execCmd('insertUnorderedList')">• Lista</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" @click="execCmd('justifyLeft')">⯇</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" @click="execCmd('justifyCenter')">≡</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" @click="execCmd('justifyRight')">⯈</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" @click="execCmd('createLink')">🔗</button>
+              </div>
+            </div>
+
+            <!-- Área editable -->
+            <div
+              id="editor"
+              class="form-control bg-white"
+              contenteditable="true"
+              style="min-height: 150px;"
+              @input="updateDescripcion"
+            ></div>
           </div>
 
           <!-- Categoría -->
@@ -89,6 +111,7 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref, watch } from 'vue'
 import { useFetch } from '#app'
@@ -107,16 +130,36 @@ const subiendoImagen = ref(false)
 const enviandoNoticia = ref(false)
 
 watch(titular, (nuevo) => {
-  slug.value = slugify(nuevo || '', { lower: true, strict: true })
+  if (!nuevo) {
+    slug.value = ''
+    return
+  }
+
+  // Obtener solo las primeras 3 palabras significativas
+  const palabras = nuevo
+    .toLowerCase()
+    .replace(/[^\w\sáéíóúüñ]/gi, '') // quitar signos
+    .split(/\s+/)
+    .filter(p => p.length > 0)
+    .slice(0, 3) // solo 3 palabras
+
+  // Crear slug con esas palabras
+  slug.value = slugify(palabras.join(' '), { lower: true, strict: true })
 })
 
-watch(descripcion, (nuevo) => {
-  if (!nuevo) return
+watch(descripcion, (nuevoHtml) => {
+  if (!nuevoHtml) return
+
+  // Convertir HTML a solo texto
+  const temp = document.createElement('div')
+  temp.innerHTML = nuevoHtml
+  const textoPlano = temp.innerText || temp.textContent || ''
+
   // Meta descripción SEO
-  metaDescripcion.value = nuevo.slice(0, 150)
+  metaDescripcion.value = textoPlano.slice(0, 150)
 
   // Frase clave básica (la palabra más repetida)
-  const palabras = nuevo
+  const palabras = textoPlano
     .toLowerCase()
     .replace(/[^\w\sáéíóúüñ]/gi, '') // quitar signos
     .split(/\s+/)
@@ -129,6 +172,7 @@ watch(descripcion, (nuevo) => {
 
   fraseClave.value = fraseClaveMasComun
 })
+
 
 const subirImagen = async (e) => {
   const file = e.target.files[0]
@@ -163,6 +207,20 @@ const subirImagen = async (e) => {
     subiendoImagen.value = false
   }
 }
+const execCmd = (comando) => {
+  if (comando === 'createLink') {
+    const url = prompt('Ingresa la URL del enlace:')
+    if (url) document.execCommand(comando, false, url)
+  } else {
+    document.execCommand(comando, false, null)
+  }
+}
+
+const updateDescripcion = () => {
+  const editor = document.getElementById('editor')
+  descripcion.value = editor.innerHTML
+}
+
 
 const enviarNoticia = async () => {
   if (!foto.value) {

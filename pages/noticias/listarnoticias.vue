@@ -12,7 +12,8 @@
           <img :src="noticia.foto" class="card-img-top" style="max-height: 200px; object-fit: cover" />
           <div class="card-body">
             <h5 class="card-title">{{ noticia.titular }}</h5>
-            <p class="card-text">{{ noticia.descripcion.slice(0, 100) }}...</p>
+            <p class="card-text">{{ extraerTextoPlano(noticia.descripcion, 100) }}</p>
+
             <p class="text-muted mb-1">
               <i class="fas fa-calendar-alt"></i> {{ formatFecha(noticia.fecha) }}
             </p>
@@ -42,8 +43,17 @@
             <label>Titular</label>
             <input v-model="editData.titular" class="form-control mb-3" required />
 
-            <label>Descripción</label>
-            <textarea v-model="editData.descripcion" rows="3" class="form-control mb-3" required></textarea>
+            <label>Descripción (puedes usar HTML)</label>
+            <textarea
+              v-model="editData.descripcion"
+              rows="5"
+              class="form-control mb-2"
+              placeholder='Ejemplo: <p><strong>Noticia importante</strong> publicada en <a href="https://ejemplo.com" target="_blank">enlace</a>.</p>'
+              required
+            ></textarea>
+            <small class="text-muted d-block mb-3">
+              Puedes usar etiquetas como: <code>&lt;p&gt;</code>, <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code>, <code>&lt;a href=""&gt;</code>.
+            </small>
 
             <label>Frase clave</label>
             <input v-model="editData.fraseClave" class="form-control mb-3" />
@@ -68,6 +78,7 @@
               <option>Opinión</option>
               <option>Viral</option>
               <option>Turismo</option>
+              <option>Empleo</option>
             </select>
 
             <label>Actualizar imagen</label>
@@ -100,7 +111,12 @@ const filtradas = computed(() =>
   noticias.value.filter(n => n.titular.toLowerCase().includes(filtro.value.toLowerCase()))
 )
 
-const formatFecha = (f) => new Date(f).toLocaleDateString('es-CO', { year: 'numeric', month: 'short', day: 'numeric' })
+const formatFecha = (f) =>
+  new Date(f).toLocaleDateString('es-CO', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  })
 
 const mostrarModal = ref(false)
 const editData = ref({
@@ -117,7 +133,7 @@ const abrirModal = (noticia) => {
   editData.value = { ...noticia }
   mostrarModal.value = true
 }
-const cerrarModal = () => mostrarModal.value = false
+const cerrarModal = () => (mostrarModal.value = false)
 
 const subirNuevaImagen = async (e) => {
   const file = e.target.files[0]
@@ -156,6 +172,14 @@ const guardarCambios = async () => {
   }
 }
 
+const extraerTextoPlano = (html, maxLength = 100) => {
+  if (!html || !process.client) return '' // Evita error en SSR
+  const temp = document.createElement('div')
+  temp.innerHTML = html
+  const texto = temp.textContent || temp.innerText || ''
+  return texto.slice(0, maxLength) + '...'
+}
+
 const eliminarNoticia = async (noticia) => {
   const confirm = await Swal.fire({
     title: '¿Eliminar esta noticia?',
@@ -187,6 +211,7 @@ const getCloudinaryPublicId = (url) => {
   return filename.split('.')[0]
 }
 </script>
+
 
 <style scoped>
 .modal-glass {
