@@ -2,9 +2,7 @@
   <nav class="navbar-css">
     <div class="navbar-container">
       <!-- Logo -->
-      
       <NuxtLink to="/" class="logo">La Mira Noticiosa</NuxtLink>
-
 
       <!-- Toggle Móvil -->
       <input type="checkbox" id="menu-toggle" />
@@ -12,7 +10,6 @@
 
       <!-- Menú principal -->
       <ul class="nav-links">
-        <!-- Dropdown de categorías -->
         <li class="dropdown">
           <a href="#">Categorías ▾</a>
           <ul class="dropdown-content">
@@ -22,29 +19,48 @@
             <li><a href="#">Deportes</a></li>
           </ul>
         </li>
-        <li><a href="#">Inicio</a></li>
-        <li><a href="#">Noticias</a></li>
-        <li><a href="#">Destacadas</a></li>
-        <li><a href="#">Contacto</a></li>
-        <li><a href="#">Nosotros</a></li>
+        <li><NuxtLink to="/">Inicio</NuxtLink></li>
+        <li><NuxtLink to="/noticias">Noticias</NuxtLink></li>
+        <li><NuxtLink to="/destacadas">Destacadas</NuxtLink></li>
+        <li><NuxtLink to="/contacto">Contacto</NuxtLink></li>
+        <li><NuxtLink to="/nosotros">Nosotros</NuxtLink></li>
+
+        <!-- 🔐 Botón cerrar sesión (visible solo si hay usuario) -->
+        <li v-if="usuario">
+          <button @click="cerrarSesion" class="btn btn-sm btn-warning">Cerrar sesión</button>
+        </li>
       </ul>
 
       <!-- Iconos extra -->
       <div class="extra-icons">
-    <a href="https://facebook.com" target="_blank" aria-label="Facebook">
-      <i class="fab fa-facebook-f"></i>
-    </a>
-    <a href="https://instagram.com" target="_blank" aria-label="Instagram">
-      <i class="fab fa-instagram"></i>
-    </a>
-    <a href="https://tiktok.com" target="_blank" aria-label="TikTok">
-      <i class="fab fa-tiktok"></i>
-    </a>
-  </div>
-
+        <a href="https://facebook.com" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="https://tiktok.com" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+      </div>
     </div>
   </nav>
 </template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+const usuario = ref(null)
+const router = useRouter()
+
+onMounted(() => {
+  const userData = localStorage.getItem('usuario')
+  if (userData) {
+    usuario.value = JSON.parse(userData)
+  }
+})
+
+const cerrarSesion = () => {
+  localStorage.removeItem('usuario')
+  usuario.value = null
+  router.push('/login')
+}
+</script>
 
 <style scoped>
 /* Estructura */

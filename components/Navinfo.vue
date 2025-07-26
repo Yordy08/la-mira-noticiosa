@@ -15,9 +15,7 @@
 
     <!-- Otras opciones -->
     <div class="d-flex flex-wrap gap-3">
-      <a href="#" class="text-decoration-none text-dark">Mi Cuenta</a>
-      <a href="#" class="text-decoration-none text-dark">USD</a>
-      <a href="#" class="text-decoration-none text-dark">ES</a>
+      <a href="#" class="text-decoration-none text-dark">Contactanos</a>
     </div>
   </div>
 

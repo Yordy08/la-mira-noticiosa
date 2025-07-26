@@ -26,6 +26,7 @@
         <div class="text-box small">
           <small>🟢 Última Noticia</small>
           <h3>{{ noticia.titular }}</h3>
+          <p class="small-text" style="color: white">{{ extraerTextoPlano(noticia.descripcion, 80) }}</p>
           <span class="btn-mini">Leer más</span>
         </div>
       </NuxtLink>
@@ -68,7 +69,6 @@ const categorias = [
 const extraerTextoPlano = (html, maxLength = 100) => {
   if (!html) return ''
   if (typeof window === 'undefined') {
-    // Fallback simple para SSR
     return html.replace(/<[^>]*>/g, '').slice(0, maxLength) + '...'
   }
   const temp = document.createElement('div')
@@ -77,7 +77,6 @@ const extraerTextoPlano = (html, maxLength = 100) => {
   return texto.slice(0, maxLength) + '...'
 }
 </script>
-
 
 <style scoped>
 .promo-container {
