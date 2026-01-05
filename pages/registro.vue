@@ -1,71 +1,54 @@
 <template>
-  <div class="form-container">
-    <h1>Registro de Usuario</h1>
-    <form @submit.prevent="registrarUsuario">
-      <input v-model="nombre" placeholder="Nombre" required />
-      <input v-model="correo" type="email" placeholder="Correo" required />
-      <input v-model="clave" type="password" placeholder="Contraseña" required />
-      <button type="submit">Registrar</button>
-    </form>
-
-    <div v-if="mensaje" class="mensaje">
-      {{ mensaje }}
-    </div>
+  <div class="error-page d-flex flex-column justify-content-center align-items-center text-center">
+    <h1 class="error-code">505</h1>
+    <p class="error-message">Servicio no disponible. Intenta recargar la página más tarde.</p>
+    <router-link to="/" class="btn btn-primary btn-home">🏠 Volver al inicio</router-link>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-
-const nombre = ref('')
-const correo = ref('')
-const clave = ref('')
-const mensaje = ref('')
-
-const registrarUsuario = async () => {
-  try {
-    const res = await fetch('/api/registro', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        nombre: nombre.value,
-        correo: correo.value,
-        clave: clave.value,
-      }),
-    })
-
-    const data = await res.json()
-
-    if (!res.ok) throw new Error(data.statusMessage || 'Error desconocido')
-
-    mensaje.value = data.mensaje
-  } catch (error) {
-    mensaje.value = `Error: ${error.message}`
-  }
-}
+// Aquí puedes agregar cualquier lógica si quieres
 </script>
 
 <style scoped>
-.form-container {
-  max-width: 400px;
-  margin: auto;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-input {
-  padding: 8px;
-  border: 1px solid #ccc;
-}
-button {
-  padding: 10px;
-  background-color: #3498db;
+.error-page {
+  height: 80vh; /* ocupa la mayor parte de la pantalla */
+  background: linear-gradient(to right, #1e3c72, #2a5298);
   color: white;
-  border: none;
+  padding: 20px;
 }
-.mensaje {
-  margin-top: 10px;
-  color: green;
+
+.error-code {
+  font-size: 8rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.error-message {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+}
+
+.btn-home {
+  padding: 10px 30px;
+  font-size: 1.2rem;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: white;
+}
+
+.btn-home:hover {
+  transform: scale(1.1);
+  text-decoration: none;
+}
+
+@media (max-width: 576px) {
+  .error-code {
+    font-size: 5rem;
+  }
+  .error-message {
+    font-size: 1.2rem;
+  }
 }
 </style>
