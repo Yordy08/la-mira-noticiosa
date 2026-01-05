@@ -3,14 +3,17 @@ export default defineNuxtConfig({
   // 🔴 Quita el badge de Nuxt
   devtools: { enabled: false },
 
+  // CSS
   css: [
     'bootstrap/dist/css/bootstrap.min.css',
     '@fortawesome/fontawesome-free/css/all.min.css',
     'animate.css'
   ],
 
+  // Plugins
   plugins: ['~/plugins/bootstrap.client.ts'],
 
+  // Favicon
   app: {
     head: {
       link: [
@@ -23,28 +26,30 @@ export default defineNuxtConfig({
     }
   },
 
+  // Variables de entorno
   runtimeConfig: {
-    // Variables privadas del servidor
+    // Privadas (solo server)
     MONGO_URI: process.env.DATABASE_URL,
     MONGO_DB: process.env.DATABASE_NAME,
 
-    // Variables públicas accesibles en cliente y servidor
+    // Públicas (cliente + server)
     public: {
       emailjsServiceId: process.env.EMAILJS_SERVICE_ID,
       emailjsTemplateId: process.env.EMAILJS_TEMPLATE_ID,
       emailjsPublicKey: process.env.EMAILJS_PUBLIC_KEY,
-      
-      // ✅ URL base para tu API (usar en fetch)
+
+      // URL base para fetch (opcional si tu API es externa)
       apiBase: process.env.VITE_API_URL || 'http://localhost:3000'
     }
   },
 
+  // ✅ Quitamos proxy innecesario
   vite: {
     server: {
-      // Opcional: proxy para desarrollo, evita problemas de CORS
-      proxy: {
-        '/api': process.env.VITE_API_URL || 'http://localhost:3000'
-      }
+      // proxy solo si realmente necesitas apuntar a un backend externo
+      // proxy: {
+      //   '/api': process.env.VITE_API_URL || 'http://localhost:3000'
+      // }
     }
   }
 })
