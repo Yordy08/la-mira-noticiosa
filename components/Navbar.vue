@@ -130,7 +130,6 @@ onMounted(() => {
   border-radius: 50%;
   box-shadow: 0 0 15px 8px white;
 
-  margin-left: 60px; /* 👈 mueve a la derecha */
 }
 
 

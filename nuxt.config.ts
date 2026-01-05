@@ -1,3 +1,4 @@
+// nuxt.config.ts
 export default defineNuxtConfig({
   // 🔴 Quita el badge de Nuxt
   devtools: { enabled: false },
@@ -23,13 +24,27 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    // Variables privadas del servidor
     MONGO_URI: process.env.DATABASE_URL,
     MONGO_DB: process.env.DATABASE_NAME,
 
+    // Variables públicas accesibles en cliente y servidor
     public: {
       emailjsServiceId: process.env.EMAILJS_SERVICE_ID,
       emailjsTemplateId: process.env.EMAILJS_TEMPLATE_ID,
-      emailjsPublicKey: process.env.EMAILJS_PUBLIC_KEY
+      emailjsPublicKey: process.env.EMAILJS_PUBLIC_KEY,
+      
+      // ✅ URL base para tu API (usar en fetch)
+      apiBase: process.env.VITE_API_URL || 'http://localhost:3000'
+    }
+  },
+
+  vite: {
+    server: {
+      // Opcional: proxy para desarrollo, evita problemas de CORS
+      proxy: {
+        '/api': process.env.VITE_API_URL || 'http://localhost:3000'
+      }
     }
   }
 })
