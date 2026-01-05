@@ -35,7 +35,7 @@ const noticias = computed(() =>
 const noticiasFiltradas = computed(() =>
   noticias.value
     .filter(n => n.categoria?.toLowerCase() === props.categoria.toLowerCase())
-    .slice(0, 6)
+    .slice(0, 4)
 )
 
 const extraerTextoPlano = (html, maxLength = 100) => {

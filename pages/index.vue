@@ -1,6 +1,6 @@
 <template>
   <div class="promo-container">
-    <!-- Banner principal (clicable completo) -->
+    <!-- Banner principal -->
     <NuxtLink
       v-if="noticias[0]"
       :to="`/noticias/${noticias[0].slug}`"
@@ -14,11 +14,11 @@
       </div>
     </NuxtLink>
 
-    <!-- Noticias secundarias (cada una clicable) -->
+    <!-- Noticias secundarias -->
     <div class="promo-side">
       <NuxtLink
-        v-for="(noticia, index) in noticias.slice(1, 3)"
-        :key="noticia.id"
+        v-for="noticia in noticias.slice(1, 3)"
+        :key="noticia._id || noticia.id"
         :to="`/noticias/${noticia.slug}`"
         class="promo-box text-decoration-none"
       >
@@ -26,7 +26,9 @@
         <div class="text-box small">
           <small>🟢 Última Noticia</small>
           <h3>{{ noticia.titular }}</h3>
-          <p class="small-text" style="color: white">{{ extraerTextoPlano(noticia.descripcion, 80) }}</p>
+          <p class="small-text" style="color: white">
+            {{ extraerTextoPlano(noticia.descripcion, 80) }}
+          </p>
           <span class="btn-mini">Leer más</span>
         </div>
       </NuxtLink>
@@ -35,7 +37,11 @@
 
   <!-- Sección por categorías -->
   <div class="container py-6">
-    <NoticiasPorCategoria v-for="cat in categorias" :key="cat" :categoria="cat" />
+    <NoticiasPorCategoria
+      v-for="cat in categorias"
+      :key="cat"
+      :categoria="cat"
+    />
   </div>
 </template>
 
@@ -44,28 +50,60 @@ import { useFetch } from '#app'
 import { computed } from 'vue'
 import NoticiasPorCategoria from '@/components/NoticiasPorCategoria.vue'
 
+/* =============================
+   🔥 CARGA DE NOTICIAS
+============================= */
 const { data } = await useFetch('/api/noticias')
 
-// ✅ Excluir noticias de la categoría "Empleo"
-const todas = computed(() =>
-  Array.isArray(data.value) ? data.value : data.value?.noticias || []
-)
+/* =============================
+   NORMALIZAR RESPUESTA
+============================= */
+const todas = computed(() => {
+  if (Array.isArray(data.value)) return data.value
+  if (Array.isArray(data.value?.noticias)) return data.value.noticias
+  return []
+})
 
-const noticias = computed(() =>
-  [...todas.value]
+/* =============================
+   ⏱️ FECHA REAL (creadoEn)
+============================= */
+const timestamp = (n) =>
+  n?.creadoEn ? new Date(n.creadoEn).getTime() : 0
+
+/* =============================
+   📰 NOTICIAS MÁS RECIENTES
+============================= */
+const noticias = computed(() => {
+  return [...todas.value]
     .filter(n => n.categoria?.toLowerCase() !== 'empleo')
-    .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+    .sort((a, b) => timestamp(b) - timestamp(a))
     .slice(0, 3)
-)
+})
 
-// ✅ Categorías visibles
+/* =============================
+   📂 CATEGORÍAS
+============================= */
 const categorias = [
-  'Nacional', 'Internacional', 'Política', 'Economía', 'Salud', 'Educación', 'Cultura',
-  'Deportes', 'Tecnología', 'Judicial', 'Medio Ambiente', 'Denuncias Ciudadanas',
-  'Opinión', 'Viral', 'Turismo'
+  'Nacional',
+  'Internacional',
+  'Política',
+  'Economía',
+  'Salud',
+  'Educación',
+  'Cultura',
+  'Deportes',
+  'Tecnología',
+  'Judicial',
+  'Medio Ambiente',
+  'Denuncias Ciudadanas',
+  'Opinión',
+  'Viral',
+  'Turismo'
 ]
 
-// ✅ Función segura para extraer texto plano del HTML (evita errores en SSR)
+/* =============================
+   🧼 TEXTO PLANO (SSR SAFE)
+============================= */
 const extraerTextoPlano = (html, maxLength = 100) => {
   if (!html) return ''
   if (typeof window === 'undefined') {
@@ -77,28 +115,35 @@ const extraerTextoPlano = (html, maxLength = 100) => {
   return texto.slice(0, maxLength) + '...'
 }
 </script>
-
 <style scoped>
 .promo-container {
   display: flex;
   gap: 1rem;
   padding: 1rem;
   flex-wrap: wrap;
-  flex-direction: row;
 }
 
+/* =========================
+   BANNER PRINCIPAL
+========================= */
 .promo-main {
   flex: 2;
   position: relative;
   border-radius: 8px;
   overflow: hidden;
-  min-height: 400px;
-  transition: transform 0.2s ease;
-}
-.promo-main:hover {
-  transform: scale(1.01);
+  height: 6dvh; /* 🔒 altura fija */
+  flex-shrink: 0;
 }
 
+.promo-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* =========================
+   NOTICIAS SECUNDARIAS
+========================= */
 .promo-side {
   flex: 1.2;
   display: flex;
@@ -106,109 +151,81 @@ const extraerTextoPlano = (html, maxLength = 100) => {
   gap: 1rem;
 }
 
+/* 🔒 CARD FIJO */
 .promo-box {
   position: relative;
-  overflow: hidden;
   border-radius: 8px;
-  min-height: 190px;
-  transition: transform 0.2s ease;
-}
-.promo-box:hover {
-  transform: scale(1.01);
+  overflow: hidden;
+  height: 300px; /* 🔥 NO se estira */
+  flex-shrink: 0;
 }
 
-.promo-main img,
+/* 🔒 IMAGEN FIJA */
 .promo-box img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
 }
 
+/* =========================
+   TEXTO
+========================= */
 .text-box {
   position: absolute;
   bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 1rem;
-  background: rgba(0, 0, 0, 0.4);
+  inset-inline: 0;
+  padding: 0.8rem;
+  background: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(4px);
   color: white;
-  z-index: 2;
 }
 
 .text-box h2,
 .text-box h3 {
-  margin: 0 0 0.5rem;
-  font-size: 1.3rem;
+  margin: 0 0 0.4rem;
   font-weight: bold;
 }
 
+/* 🔒 Limitar texto para que NO estire */
 .text-box p {
-  font-size: 0.95rem;
-  margin-bottom: 0.8rem;
-  line-height: 1.6;
-  color: #ffffff;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* 🔥 máximo 3 líneas */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.btn-link {
-  background: #e50914;
-  color: #fff;
-  font-weight: bold;
-  padding: 0.4rem 1rem;
-  font-size: 0.95rem;
-  border-radius: 4px;
-  display: inline-block;
-}
-
-.text-box.small h3 {
-  font-size: 1.1rem;
-  margin: 0 0 0.5rem;
-}
-
-.text-box.small small {
-  font-size: 0.8rem;
-  display: inline-block;
-  margin-bottom: 0.3rem;
-}
-
+/* =========================
+   BOTONES
+========================= */
+.btn-link,
 .btn-mini {
   background: #e50914;
   color: #fff;
-  padding: 0.3rem 0.8rem;
-  font-size: 0.8rem;
   font-weight: 600;
-  text-decoration: none;
-  border-radius: 3px;
+  border-radius: 4px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
   display: inline-block;
 }
 
+/* =========================
+   RESPONSIVE
+========================= */
 @media (max-width: 768px) {
   .promo-container {
     flex-direction: column;
   }
 
-  .promo-main,
+  .promo-main {
+    height: 300px;
+  }
+
   .promo-box {
-    min-height: 300px;
-  }
-
-  .text-box {
-    padding: 0.8rem;
-  }
-
-  .text-box h2,
-  .text-box h3 {
-    font-size: 1rem;
-  }
-
-  .text-box p {
-    font-size: 0.85rem;
-  }
-
-  .btn-link {
-    font-size: 0.85rem;
-    padding: 0.3rem 0.8rem;
+    height: 220px;
   }
 }
+
 </style>
