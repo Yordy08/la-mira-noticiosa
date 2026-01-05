@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  // 🔴 Quita el logo/badge de Nuxt en desarrollo
+  // 🔴 Quita el badge de Nuxt
   devtools: { enabled: false },
 
   css: [
@@ -10,12 +10,22 @@ export default defineNuxtConfig({
 
   plugins: ['~/plugins/bootstrap.client.ts'],
 
+  app: {
+    head: {
+      link: [
+        {
+          rel: 'icon',
+          type: 'image/png',
+          href: 'https://res.cloudinary.com/dxgbnimmk/image/upload/v1767576011/592362856_1608730623429973_850172643014552373_n_pe6erk.jpg'
+        }
+      ]
+    }
+  },
+
   runtimeConfig: {
-    // 🔐 SOLO backend (no se expone al frontend)
     MONGO_URI: process.env.DATABASE_URL,
     MONGO_DB: process.env.DATABASE_NAME,
 
-    // 🌍 Público (frontend)
     public: {
       emailjsServiceId: process.env.EMAILJS_SERVICE_ID,
       emailjsTemplateId: process.env.EMAILJS_TEMPLATE_ID,
