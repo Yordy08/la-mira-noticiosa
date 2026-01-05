@@ -15,7 +15,7 @@
 
     <!-- Otras opciones -->
     <div class="d-flex flex-wrap gap-3">
-      <a href="#" class="text-decoration-none text-dark">Contactanos</a>
+      <NuxtLink style="color: black;" to="info/contac">Contactanos</NuxtLink>
     </div>
   </div>
 

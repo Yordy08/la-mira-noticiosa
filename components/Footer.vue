@@ -15,7 +15,7 @@
       <div class="footer-links">
         <h4>Pautar con La Mira Noticiosa</h4>
 
-        <NuxtLink to="/contacto">Contacto</NuxtLink>
+        <NuxtLink to="info/contac">Contacto</NuxtLink>
       </div>
 
       <!-- Redes -->
