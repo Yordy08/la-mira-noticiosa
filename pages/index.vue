@@ -219,13 +219,50 @@ const extraerTextoPlano = (html, maxLength = 100) => {
     flex-direction: column;
   }
 
+  /* =========================
+     ALTURAS MÁS COMPACTAS
+  ========================= */
   .promo-main {
-    height: 300px;
+    height: 260px;
   }
 
   .promo-box {
-    height: 220px;
+    height: 200px;
+  }
+
+  /* =========================
+     OVERLAY MÁS LIGERO
+  ========================= */
+  .text-box {
+    padding: 0.6rem;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.75),
+      rgba(0, 0, 0, 0.15)
+    );
+    backdrop-filter: none; /* 🔥 evita que opaque la imagen */
+  }
+
+  /* =========================
+     TEXTO OPTIMIZADO
+  ========================= */
+  .text-box h2,
+  .text-box h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+  }
+
+  /* 🔥 Ocultar texto largo en móvil */
+  .text-box p {
+    display: none;
+  }
+
+  .btn-link,
+  .btn-mini {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
   }
 }
+
 
 </style>
