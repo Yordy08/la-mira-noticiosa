@@ -49,12 +49,6 @@ a:hover {
   color: #ff0000 !important;
 }
 
-.categoria-link {
-  background-color: #f1f1f1;
-  transition: all 0.3s ease;
-  font-weight: 500;
-  white-space: nowrap;
-}
 
 .categoria-link:hover {
   background-color: #ff0000;
@@ -63,7 +57,14 @@ a:hover {
 
 .categorias-scroll {
   overflow-x: auto;
-  white-space: nowrap;
-  padding-bottom: 6px;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
 }
+
+.categoria-link {
+  display: inline-flex;
+  flex-shrink: 0;
+  font-size: clamp(0.85rem, 1vw, 1rem);
+}
+
 </style>

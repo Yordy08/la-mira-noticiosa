@@ -102,6 +102,25 @@ import { ref, computed } from 'vue'
 import { useFetch } from '#app'
 import Swal from 'sweetalert2'
 import slugify from 'slugify'
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+onMounted(() => {
+  const data = localStorage.getItem('usuario')
+
+  console.log('🔍 ListarNoticias.vue - usuario en localStorage:', data)
+
+  if (!data) {
+    console.log('🔴 Acceso denegado: no hay usuario logueado')
+    router.push('/login')
+  } else {
+    const user = JSON.parse(data)
+    console.log('🟢 Acceso permitido. Usuario activo:', user)
+  }
+})
+
 
 const { data, refresh } = await useFetch('/api/noticias')
 const noticias = computed(() => Array.isArray(data.value) ? data.value : data.value?.noticias || [])

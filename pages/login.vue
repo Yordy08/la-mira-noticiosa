@@ -31,7 +31,7 @@
         </button>
       </form>
 
-      <div v-if="error" class="alert alert-danger mt-3" role="alert">
+      <div v-if="error" class="alert alert-danger mt-3">
         {{ error }}
       </div>
     </div>
@@ -50,38 +50,46 @@ const error = ref('')
 const iniciarSesion = async () => {
   cargando.value = true
   error.value = ''
-  console.clear()
 
-  try {
-    const { data, error: fetchError } = await useFetch('/api/login', {
-      method: 'POST',
-      body: {
-        correo: correo.value,
-        clave: clave.value
-      }
-    })
-
-    console.log('🟢 Respuesta del backend:', data.value)
-
-    if (fetchError.value) {
-      console.error('🔴 Error desde useFetch:', fetchError.value)
-      error.value = fetchError.value?.message || 'Error en la petición'
-    } else if (data.value?.ok) {
-      Swal.fire('✅ Bienvenido', `Hola ${data.value.usuario.nombre}`, 'success')
-      // Puedes guardar el usuario si lo deseas
-      // localStorage.setItem('usuario', JSON.stringify(data.value.usuario))
-      navigateTo('/')
-    } else {
-      error.value = data.value?.error || 'Correo o contraseña incorrectos'
+  const { data, error: fetchError } = await useFetch('/api/login', {
+    method: 'POST',
+    body: {
+      correo: correo.value,
+      clave: clave.value
     }
-  } catch (e) {
-    console.error('🔴 Error inesperado:', e)
-    error.value = 'Error de conexión con el servidor'
+  })
+
+  if (fetchError.value) {
+    error.value = fetchError.value.data?.error || 'Error en el servidor'
+    cargando.value = false
+    return
+  }
+
+  if (data.value?.ok) {
+    // ✅ GUARDA USUARIO
+    localStorage.setItem(
+      'usuario',
+      JSON.stringify(data.value.usuario)
+    )
+
+    // ✅ EVENTO GLOBAL (clave)
+    window.dispatchEvent(new Event('usuario-logueado'))
+
+    await Swal.fire(
+      '✅ Bienvenido',
+      `Hola ${data.value.usuario.nombre}`,
+      'success'
+    )
+
+    navigateTo('/admin')
+  } else {
+    error.value = data.value?.error || 'Datos incorrectos'
   }
 
   cargando.value = false
 }
 </script>
+
 
 <style scoped>
 .login-container {

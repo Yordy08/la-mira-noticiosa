@@ -34,7 +34,7 @@
   </div>
 
   <!-- Sección por categorías -->
-  <div class="container py-5">
+  <div class="container py-6">
     <NoticiasPorCategoria v-for="cat in categorias" :key="cat" :categoria="cat" />
   </div>
 </template>

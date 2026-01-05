@@ -117,6 +117,9 @@ import { ref, watch } from 'vue'
 import { useFetch } from '#app'
 import slugify from 'slugify'
 import Swal from 'sweetalert2'
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
 
 const foto = ref('')
 const titular = ref('')
@@ -128,6 +131,21 @@ const slug = ref('')
 const mensaje = ref('')
 const subiendoImagen = ref(false)
 const enviandoNoticia = ref(false)
+const router = useRouter()
+
+onMounted(() => {
+  const data = localStorage.getItem('usuario')
+
+  console.log('🔍 CrearNoticia.vue - usuario en localStorage:', data)
+
+  if (!data) {
+    console.log('🔴 Acceso denegado: no hay usuario logueado')
+    router.push('/login')
+  } else {
+    console.log('🟢 Acceso permitido. Usuario activo:', JSON.parse(data))
+  }
+})
+
 
 watch(titular, (nuevo) => {
   if (!nuevo) {

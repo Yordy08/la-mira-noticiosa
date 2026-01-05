@@ -1,32 +1,32 @@
 import { MongoClient, Db, Collection, Document } from 'mongodb'
-import { useRuntimeConfig } from '#imports'
 
 let cachedClient: MongoClient | null = null
 
 export async function connect(): Promise<MongoClient> {
   if (cachedClient) return cachedClient
 
-  const config = useRuntimeConfig()
-  const uri = config.MONGO_URI
+  const uri = process.env.DATABASE_URL
 
-  if (!uri) throw new Error('MONGO_URI no definido')
+  if (!uri) {
+    throw new Error('DATABASE_URL no definido en el archivo .env')
+  }
 
   const client = new MongoClient(uri)
   await client.connect()
+
+  console.log('🟢 MongoDB conectado correctamente')
   cachedClient = client
   return client
 }
 
 export function getDatabase(client: MongoClient): Db {
-  const config = useRuntimeConfig()
-  const dbName = config.MONGO_DB
-
-  if (!dbName) throw new Error('MONGO_DB no definido')
-
-  return client.db(dbName)
+  // 👇 toma la DB directamente desde la URL
+  return client.db()
 }
 
-// ✅ Restricción de tipo para cumplir con lo que espera MongoDB
-export function getCollection<T extends Document>(db: Db, name: string): Collection<T> {
+export function getCollection<T extends Document>(
+  db: Db,
+  name: string
+): Collection<T> {
   return db.collection<T>(name)
 }

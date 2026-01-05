@@ -6,6 +6,7 @@
     <Navinfo />
     <Navcatego />
     <NuxtPage />
+    <Footer />
   </div>
 </template>
 

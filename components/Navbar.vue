@@ -42,11 +42,14 @@
         <!-- Info contacto -->
         <div class="col-12 col-md-3 text-center text-md-end">
   <div class="d-none d-md-block text-white">
-    <small class="d-block">💼 Oportunidades laborales</small>
-    <NuxtLink :to="`/categoria/${encodeURIComponent(categoria)}`"  v-for="categoria in categorias"
-        :key="categoria" class="text-white fw-bold text-decoration-none">
-      Ver Panel de Empleo
-    </NuxtLink>
+    <small class="d-block">Noticias en la mira</small>
+    <NuxtLink
+  to="/destacadas"
+  class="text-white fw-bold text-decoration-none"
+>
+  Ver Noticias Destacadas
+</NuxtLink>
+
   </div>
 </div>
       </div>
@@ -77,7 +80,7 @@ const categorias = [
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  overflow: hidden;
+  overflow: clip;
 }
 
 .desenfoque {

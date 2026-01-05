@@ -40,5 +40,8 @@
     "@types/bcrypt": "^6.0.0",
     "@types/formidable": "^3.4.5",
     "prisma": "^6.11.1"
+  },
+  "optionalDependencies": {
+    "@oxc-parser/binding-win32-x64-msvc": "^0.106.0"
   }
 }

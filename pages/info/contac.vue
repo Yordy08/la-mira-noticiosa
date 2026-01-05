@@ -42,19 +42,20 @@
         <div class="col-md-5">
           <div class="bg-danger p-4 rounded shadow-sm h-100">
             <h5 class="text-white mb-3">
-              <i class="fas fa-phone-alt me-2"></i> Teléfono
+             <i class="fab fa-whatsapp me-2"></i> WhatsApp
+
             </h5>
-            <p class="text-white-50 mb-4">+57 312 345 6789</p>
+            <p class="text-white-50 mb-4">+57 305 384 7585</p>
 
             <h5 class="text-white mb-3">
               <i class="fas fa-envelope me-2"></i> Correo
             </h5>
-            <p class="text-white-50 mb-4">contacto@tusitio.com</p>
+            <p class="text-white-50 mb-4">lamiranoticiosa@gmail.com</p>
 
             <h5 class="text-white mb-3">
               <i class="fas fa-map-marker-alt me-2"></i> Dirección
             </h5>
-            <p class="text-white-50">Calle 123 #45-67, Bogotá, Colombia</p>
+            <p class="text-white-50">San Antero, Córdoba, Colombia</p>
           </div>
         </div>
       </div>
