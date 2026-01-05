@@ -131,7 +131,7 @@ const extraerTextoPlano = (html, maxLength = 100) => {
   position: relative;
   border-radius: 8px;
   overflow: hidden;
-  height: 6dvh; /* 🔒 altura fija */
+  height: 620px; /* 🔒 altura fija */
   flex-shrink: 0;
 }
 
